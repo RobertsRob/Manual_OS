@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+// import { ref } from 'vue'
 interface TaskbarApp{
     name: string
     src: string
@@ -9,7 +9,7 @@ const props = defineProps<{
   taskbarApp: TaskbarApp 
 }>()
 
-const isHovered = ref(false)
+// const isHovered = ref(false)
 
 </script>
 
