@@ -1,28 +1,21 @@
 <script setup lang="ts">
 import Icon from './Icon.vue'
+import { applications } from '../../data/desktop.ts';
+import type { Application } from "../../data/desktop"
 
-const icons = [
-    {
-    name: "Trash bin",
-    src: "https://cdn-icons-png.flaticon.com/512/4021/4021663.png",
-    shortcut: "C/abc/abcd",
-    position: [0, 0] as [number, number]
-    },
-    {
-    name: "Google Chrome",
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/3840px-Google_Chrome_icon_%28February_2022%29.svg.png",
-    shortcut: "C/abc/abc",
-    position: [0, 9.5] as [number, number]
-    }
-]
+const emit = defineEmits<{
+    (e: 'open', app: Application): void
+}>()
+
 </script>
 
 <template>
     <div class="icons">
         <Icon 
-            v-for="icon in icons"
-            :key="icon.name"
-            :icon="icon" 
+            v-for="app in applications.filter(app => app.render)"
+            :key="app.name"
+            :icon="app" 
+            @open="emit('open', $event)"
         />
     </div>
 </template>

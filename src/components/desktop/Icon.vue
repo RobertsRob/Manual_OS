@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Application } from '../../data/desktop'
 
-interface Icon{
-    name:  string
-    src: string
-    shortcut: string
-    position: [number, number] // in vh, x, y,
-}
 const props = defineProps<{
-  icon: Icon 
+  icon: Application 
 }>()
+
 const position = ref(props.icon.position)
 const startPos = ref([0, 0])
 const startIconPos = ref([0, 0])
@@ -61,6 +57,14 @@ function stopHover(){
         bgc.value = "#87f6fa00"
 }
 
+const emit = defineEmits<{
+  (e: 'open', app: Application): void
+}>()
+
+function openApp() {
+  emit('open', props.icon)
+}
+
 </script>
 
 <template>
@@ -69,6 +73,7 @@ function stopHover(){
         @mousedown="startDrag($event)"
         @mouseenter="startHover()"
         @mouseleave="stopHover()"
+        @dblclick="openApp"
         :style="{
             left: `${position[0]}vh`,
             top: `${position[1]}vh`,
