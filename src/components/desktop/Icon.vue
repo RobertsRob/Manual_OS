@@ -88,7 +88,6 @@ function stopHover(){
         width: 7vh;
         padding: 0.5vh 0.5vh 0.5vh 0.5vh;
         margin: 1vh 1vh 1vh 1vh;
-        /* 87f6fa48 */
         background-color: #87f6fa00;
     }
     .icon_image
