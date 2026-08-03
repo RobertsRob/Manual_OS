@@ -6,7 +6,7 @@ const props = defineProps<{
   icon: Application 
 }>()
 
-const position = ref(props.icon.position)
+const position = ref(props.icon.position_shortcut)
 const startPos = ref([0, 0])
 const startIconPos = ref([0, 0])
 const bgc = ref("#87f6fa00")
