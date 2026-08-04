@@ -1,52 +1,58 @@
 <script setup lang="ts">
 
-import { ref, type App, onMounted, onUnmounted } from 'vue'
+// import { ref } from 'vue'
 import Wallpaper from './Wallpaper.vue'
 import Icons from './Icons.vue'
 import Window from './Window.vue'
 import type { Application } from "../../data/desktop"
 import { applications } from "../../data/desktop"
 
-const openedApps = ref<Application[]>([])
-let zIndex = 1
+// const openedApps = ref<Application[]>([])
+const props = defineProps<{
+  openedApps: Application[]
+  zIndex: number
+}>()
+
 let id = 0
 
 function openApp(app: Application) {
-    openedApps.value.push({
-        ...app,
-        id: id++,
-        zIndex: zIndex++,
-        position: [...app.position] as [number, number],
-        size: [...app.size] as [number, number]
-    })
+  emit('increaseZ')
+  props.openedApps.push({
+    ...app,
+    id: id++,
+    zIndex: props.zIndex,
+    position: [...app.position] as [number, number],
+    size: [...app.size] as [number, number]
+  })
 }
 
-function closeApp(app: Application) {
-    openedApps.value = openedApps.value.filter(
-        a => a.id !== app.id
-    )
-}
+const emit = defineEmits<{
+  (e: 'close', app: Application): void
+  (e: 'increaseZ'): void
+}>()
 
 function bringToTheFront(app: Application) {
-    app.zIndex = zIndex++
+  emit('increaseZ')
+  app.zIndex = props.zIndex
 }
 
 function bringToTheBack(app: Application) {
-    app.zIndex = -1
+  app.minimized = true
+  app.zIndex = -1
 }
 
 function maximize(app: Application) {
   bringToTheFront(app)
 
   const taskbarHeight = Math.min(
-      Math.max(window.innerHeight * 0.05, 40),
-      70
+    Math.max(window.innerHeight * 0.05, 40),
+    70
   )
 
   app.position = [0, 0]
   app.size = [
-      window.innerWidth,
-      window.innerHeight - taskbarHeight
+    window.innerWidth,
+    window.innerHeight - taskbarHeight
   ]
 }
 
@@ -64,7 +70,6 @@ function part_screen(app: Application){
   }
 }
 
-
 </script>
 
 <template>
@@ -81,7 +86,7 @@ function part_screen(app: Application){
       :zIndex="app.zIndex"
       :component="app.component"
       :position="app.position"
-      @close="closeApp(app)"
+      @close="emit('close', app)"
       @minimize="bringToTheBack(app)"
       @full_screen="maximize(app)"
       @part_screen="part_screen(app)"

@@ -1,5 +1,5 @@
-import Chrome from "../components/desktop/apps/Chrome.vue"
 import Trash from "../components/desktop/apps/Trash.vue"
+import WebBrowser from "../components/desktop/apps/WebBrowser.vue"
 
 export interface Application {
     id?: number
@@ -12,6 +12,7 @@ export interface Application {
     size: [number, number]
     component: any
     zIndex?: number
+    minimized: boolean
 }
 
 export const applications: Application[] = [
@@ -24,17 +25,19 @@ export const applications: Application[] = [
         position: [100, 100] as [number, number],
         size: [800, 600] as [number, number],
         component: Trash,
-        zIndex: 5
+        zIndex: 5,
+        minimized: false,
     },
     {
-    name: "Google Chrome",
+    name: "Web browser",
     render: true,
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/3840px-Google_Chrome_icon_%28February_2022%29.svg.png",
+    src: "https://static.vecteezy.com/system/resources/previews/016/716/476/non_2x/internet-browser-icon-free-png.png",
     shortcut: "C/abc/abc",
     position_shortcut: [0, 9.5] as [number, number],
     position: [100, 100] as [number, number],
     size: [800, 600] as [number, number],
-    component: Chrome,
-    zIndex: 5
+    component: WebBrowser,
+    zIndex: 5,
+    minimized: false,
     }
 ]

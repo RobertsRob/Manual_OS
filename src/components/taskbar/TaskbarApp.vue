@@ -1,22 +1,18 @@
 <script setup lang="ts">
 // import { ref } from 'vue'
-interface TaskbarApp{
-    name: string
-    src: string
-    shortcut: string
-}
-const props = defineProps<{
-  taskbarApp: TaskbarApp 
-}>()
+import type { Application } from "../../data/desktop"
 
-// const isHovered = ref(false)
+const props = defineProps<{
+  taskbarApp: Application
+  active: boolean 
+}>()
 
 </script>
 
 <template>
     <div class="app">
         <img :src="taskbarApp.src" class="app_image" draggable="false">
-        <div class="small_stripe"></div>
+        <div class="small_stripe" :class="{active: active}"></div>
     </div>
 </template>
 
@@ -40,5 +36,11 @@ const props = defineProps<{
         position: relative;
         top: -12%;
         border-radius: 15px;
+        transition: 0.2s;
+    }
+    .small_stripe.active {
+        width: 32%;
+        transition: 0.2s;
+        background-color: rgb(135, 182, 243);
     }
 </style>

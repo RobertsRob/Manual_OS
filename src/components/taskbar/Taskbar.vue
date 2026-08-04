@@ -1,27 +1,41 @@
 <script setup lang="ts">
 import TaskbarApp from './TaskbarApp.vue';
+import { type Application } from '../../data/desktop.ts';
 
-const taskbarApps = [
-    {
-        name:"GitHub",
-        src: "https://freepnglogo.com/images/all_img/github-logo-white-stroke-2a6c.png",
-        shortcut: "C/sdb/cc"
-    },
-    {
-        name:"File Explorer",
-        src: "https://winaero.com/blog/wp-content/uploads/2018/12/file-explorer-folder-libraries-icon-18298.png",
-        shortcut: "C/sdb/ccd"
-    }
-]
+const props = defineProps<{
+    openedApps: Application[]
+    zIndex: number
+}>()
+
+function taskbarAppClick(app: Application){
+    emit("increaseZ")
+    props.openedApps.forEach(appOpened => {
+        if(appOpened.id == app.id){
+            app.zIndex = props.zIndex
+            app.minimized = false
+        }
+    });
+}
+
+function highestZIndex(){
+    if(props.openedApps.length === 0) return -1
+    return Math.max(...props.openedApps.map(app => app.zIndex ?? 0))
+}
+
+const emit = defineEmits<{
+    (e: 'increaseZ'): void
+}>()
 
 </script>
 
 <template>
     <footer class="taskbar">
         <TaskbarApp 
-            v-for="taskbarApp in taskbarApps"
+            v-for="taskbarApp in openedApps"
             :key="taskbarApp.name"
             :taskbarApp="taskbarApp"
+            @mousedown="taskbarAppClick(taskbarApp)"
+            :active="taskbarApp.zIndex === highestZIndex()"
         />
     </footer>
 </template>
