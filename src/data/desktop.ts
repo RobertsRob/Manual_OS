@@ -1,5 +1,6 @@
 import Trash from "../components/desktop/apps/Trash.vue"
 import WebBrowser from "../components/desktop/apps/WebBrowser.vue"
+import Notepad from "../components/desktop/apps/Notepad.vue"
 
 export interface Application {
     id?: number
@@ -37,6 +38,18 @@ export const applications: Application[] = [
     position: [100, 100] as [number, number],
     size: [800, 600] as [number, number],
     component: WebBrowser,
+    zIndex: 5,
+    minimized: false,
+    },
+    {
+    name: "Notepad",
+    render: true,
+    src: "https://cdn-icons-png.flaticon.com/512/11021/11021968.png",
+    shortcut: "C/abdc/abc",
+    position_shortcut: [0, 19] as [number, number],
+    position: [100, 100] as [number, number],
+    size: [500, 700] as [number, number],
+    component: Notepad,
     zIndex: 5,
     minimized: false,
     }

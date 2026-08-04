@@ -99,8 +99,9 @@ function full_part_screen(){
 
 <style scoped>
 header{
+    backdrop-filter: blur(5px);
     display: flex;
-    background-color: #414040d8;
+    background-color: #414040b7;
     text-align: left;
     height: 30px;
     border-radius: 6px 6px 0 0;
@@ -120,6 +121,7 @@ header{
     margin-left: 4px;
 }
 .window {
+    overflow: hidden;
     position: absolute;
     top: 100px;
     left: 100px;
