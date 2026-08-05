@@ -1,4 +1,23 @@
 # Manual_OS
-welcome to this project so is this project means that this is a webos and this is basically simulates us as it is a run in a web application web reviewing application so in this web application you can see multiple features one of them is the dragon Ball desktop icons when you press it and hold it you can drag them around the desktop so yeah that's one feature like it's really similar to Windows so the next feature is when you double click on icon that's a app opens and you can actually use it so yeah that's pretty cool too :-) so the next feature is that you can also drag this Windows maximize it minimize it and of course close it oh oh yeah it's also similar to every other OS Windows Linux or otherwise it's not similar to Mike because of Mike is there's dots but on my eyes are so like specific icons but yeah it's the next feature that I'm really proud of is taskbar because it's a taskbar you can actually open minimize Windows you can also like shoes the white window is on top of others it's also like is that I copied from straight from Windows you can you can see which app is on top by how wide is that small small lying under the application icon on the taskbar 
+Welcome to this project! This is a Web OS that simulates a real desktop operating system inside a web application.
 
-so basically to run it just close it and then run with npm run
+## Features
+* **Draggable desktop icons** - Click and hold to drag them around, just like in any other OS
+* **Interactive desktop icons** - Double click an icon to open an app and use it
+* **Window management** - Drag, maximize, minimize, and close windows, just like in Windows or Linux, not like in MacOS though i have icons not colored points
+* **Taskbar** - Open and minimize apps, switch between windows, and easily see which app is currently active by the line underneath its icon, similar to Windows
+
+
+### How to Run
+1. Clone the repository:
+   `git clone <repository-url>`
+2. Go to the project folder:
+   `cd <folder>`
+3. Install the dependencies:
+   `npm install`
+5. Start the development server:
+   `npm run dev`
+6. Open the local URL shown in your terminal (`http://localhost:5173`).
+
+### AI usage
+AI was used as Vue documentation - source of syntax, this readme language formating, though it needed a lot of editing by hand, and bug finding.
