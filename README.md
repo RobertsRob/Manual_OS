@@ -26,3 +26,8 @@ Try it: [link](https://robertsrob.github.io/Manual_OS/)
 
 ### AI usage
 AI was used as Vue documentation - source of syntax, this readme language formating, though it needed a lot of editing by hand, and bug finding.
+
+### Sourcer
+1. Anime wallpaper: [https://x.com/hashtag/%E5%B4%A9%E5%A3%8A%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%AC%E3%82%A4%E3%83%AB](https://x.com/hashtag/%E5%B4%A9%E5%A3%8A%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%AC%E3%82%A4%E3%83%AB)
+2. Motorcycle: [https://www.facebook.com/revzilla/photos/2026-harley-davidson-deadwood-first-look-blacked-out-and-bagless-read-more-on-co/1372145761692803/](https://www.facebook.com/revzilla/photos/2026-harley-davidson-deadwood-first-look-blacked-out-and-bagless-read-more-on-co/1372145761692803/)
+3. Mountain wallpaper: [https://unsplash.com/photos/aerial-photo-of-brown-moutains-JgOeRuGD_Y4](https://unsplash.com/photos/aerial-photo-of-brown-moutains-JgOeRuGD_Y4)
