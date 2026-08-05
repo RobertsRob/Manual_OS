@@ -11,7 +11,7 @@ Welcome to this project! This is a Web OS that simulates a real desktop operatin
 
 Try it: [link](https://robertsrob.github.io/Manual_OS/)
 
-![Web OS Screenshot](https://stardance.hackclub.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjUxMzc1LCJwdXIiOiJibG9iX2lkIn19--7ec5d14ffd5062a3ba7287f48a7437ec5adc6d0b/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2xpbWl0IjpbMTYwMCw5MDBdLCJzYXZlciI6eyJzdHJpcCI6dHJ1ZSwicXVhbGl0eSI6NzV9fSwicHVyIjoidmFyaWF0aW9uIn19--5394ecd620f1b8ee9be71be3f37cd22b8a88953c/image.png))
+![Web OS Screenshot](https://stardance.hackclub.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjUxMzc1LCJwdXIiOiJibG9iX2lkIn19--7ec5d14ffd5062a3ba7287f48a7437ec5adc6d0b/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2xpbWl0IjpbMTYwMCw5MDBdLCJzYXZlciI6eyJzdHJpcCI6dHJ1ZSwicXVhbGl0eSI6NzV9fSwicHVyIjoidmFyaWF0aW9uIn19--5394ecd620f1b8ee9be71be3f37cd22b8a88953c/image.png)
 
 ### How to Run
 1. Clone the repository:
