@@ -12,6 +12,7 @@ const props = defineProps<{
     position: [number, number]
     zIndex?: number
     component: Component
+    active: boolean
 }>()
 
 const dragging = ref(false)
@@ -29,7 +30,6 @@ function move(event: MouseEvent) {
 }
 
 function startDrag(event: MouseEvent) {
-    console.log(223)
     dragging.value = true
     startPos.value = [
         event.clientX ,
@@ -79,7 +79,7 @@ function full_part_screen(){
         left: `${position[0]}px`,
         top: `${position[1]}px`,
         width: `${size[0]}px`,
-        height: `calc(${size[1]}px - 30px)`,
+        height: `calc(${size[1]}px)`,
         zIndex: zIndex
     }">
         <header>
@@ -93,7 +93,7 @@ function full_part_screen(){
                 <div class="close" @click="emit('close')"><img class="icon_window" :src="closeImage" draggable="false"></div>
             </div>
         </header>
-        <component :is="component"/>
+        <component :is="component" :active="props.active"/>
     </div>
 </template>
 
@@ -125,8 +125,6 @@ header{
     position: absolute;
     top: 100px;
     left: 100px;
-    /* width: 800px;
-    height: 600px; */
     background: rgba(58, 58, 58, 0.473);
     border-radius: 6px;
 }

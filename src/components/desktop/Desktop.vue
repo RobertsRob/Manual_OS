@@ -70,6 +70,11 @@ function part_screen(app: Application){
   }
 }
 
+function highestZIndex(){
+    if(props.openedApps.length === 0) return -1
+    return Math.max(...props.openedApps.map(app => app.zIndex ?? 0))
+}
+
 </script>
 
 <template>
@@ -86,6 +91,7 @@ function part_screen(app: Application){
       :zIndex="app.zIndex"
       :component="app.component"
       :position="app.position"
+      :active="app.zIndex === highestZIndex()"
       @close="emit('close', app)"
       @minimize="bringToTheBack(app)"
       @full_screen="maximize(app)"
