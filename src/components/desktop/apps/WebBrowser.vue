@@ -31,6 +31,7 @@ header{
     background-color: #7c7c7c8f;
     border-radius: 0px;
     padding: 4px 0 4px 0;
+    backdrop-filter: blur(5px);
 }
 .url_enter{
     width: calc(100% - 40px);

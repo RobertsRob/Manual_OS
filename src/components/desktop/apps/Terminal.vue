@@ -85,16 +85,18 @@ function runCommand(){
 
     const com = command.value as keyof typeof listCommands
     if(com in listCommands) { 
-        let output = listCommands[com]() 
-        addTerminalPart(output.output + "\n", output.class)
+        let output = listCommands[com]()
+        if(Array.isArray(output)){
+            output.forEach(item =>{
+                addTerminalPart(item.output, item.class)
+            })
+            addTerminalPart("\n")
+        } else addTerminalPart(output.output + "\n", output.class)
     }
     else{
         let part = notFound(command.value)
         addTerminalPart(part.output, part.class)
     }
-    
-    
-    
 
     command.value = ""
 
@@ -144,5 +146,12 @@ span{
 }
 .error{
     color: rgb(255, 142, 142);
+}
+.cyan{
+    color: cyan;
+}
+.bold-cyan{
+    color: cyan;
+    font-weight: 600;
 }
 </style>
