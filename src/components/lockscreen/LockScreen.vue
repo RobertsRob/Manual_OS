@@ -45,7 +45,7 @@
             setTimeout(() => {
                 inputDisabled.value = false
                 usernameInput.value?.focus()
-            }, 200)
+            }, 50)
             return;
         }
         if (event.code === "Escape") {

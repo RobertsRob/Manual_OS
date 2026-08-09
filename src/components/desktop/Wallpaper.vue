@@ -6,6 +6,7 @@
 
     const props = defineProps<{
         wallpaperNumber: number
+        top_offset?: number
     }>()
 
     const wallpapers = [
@@ -19,7 +20,7 @@
 <template>
     <div 
         class="wallpaper"
-        :style="{backgroundImage: `url(${wallpapers[props.wallpaperNumber - 1]})`}"
+        :style="{backgroundImage: `url(${wallpapers[props.wallpaperNumber - 1]})`, backgroundPosition: `center ${top_offset}px`}"
     ></div>
 </template>
 
@@ -28,6 +29,6 @@
     position: absolute;
     inset: 0;
     background-size: cover;
-    background-position: center;
+    /* background-position: center; */
 }
 </style>

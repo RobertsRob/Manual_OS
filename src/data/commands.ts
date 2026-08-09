@@ -1,5 +1,7 @@
 // import {ref} from 'vue'
 import { version, uptime } from "./user"
+import { openApp } from "./desktop"
+import { applications } from "./desktop"
 
 interface CommandResult {
     output: string
@@ -16,26 +18,11 @@ export const listCommands: Record<string, CommandFunction> = {
         console.log("shutdown called")
         return {output: "shutdown called"}
     },
-    explorer: () => {
-        console.log("explorer called")
-        return {output: "explorer called"}
-    },
-    web: () => {
-        console.log("web called")
-        return {output: "web called"}
-    },
-    notepad: () => {
-        console.log("notepad called")
-        return {output: "notepad called"}
-    },
-    trash: () => {
-        console.log("trash called")
-        return {output: "trash called"}
-    },
-    terminal: () => {
-        console.log("terminal called")
-        return {output: "terminal called"}
-    },
+    explorer,
+    web,
+    notepad,
+    trash,
+    terminal,
 } as const
 
 
@@ -48,6 +35,48 @@ export function help(): CommandResult {
     });
     return {output: output.slice(0, -1)}
 }
+
+export function explorer(): CommandResult {
+    const app = applications.find(app => app.name === "File Explorer");
+    if (app) {
+        openApp(app);
+        return { output: "" };
+    }
+    return {output: "Failed to open app", class: "error_white"}
+}
+export function web(): CommandResult {
+    const app = applications.find(app => app.name === "Web browser");
+    if (app) {
+        openApp(app);
+        return { output: "" };
+    }
+    return {output: "Failed to open app", class: "error_white"}
+}
+export function notepad(): CommandResult {
+    const app = applications.find(app => app.name === "Notepad");
+    if (app) {
+        openApp(app);
+        return { output: "" };
+    }
+    return {output: "Failed to open app", class: "error_white"}
+}
+export function trash(): CommandResult {
+    const app = applications.find(app => app.name === "Trash bin");
+    if (app) {
+        openApp(app);
+        return { output: "" };
+    }
+    return {output: "Failed to open app", class: "error_white"}
+}
+export function terminal(): CommandResult {
+    const app = applications.find(app => app.name === "Terminal");
+    if (app) {
+        openApp(app);
+        return { output: "" };
+    }
+    return {output: "Failed to open app", class: "error_white"}
+}
+
 
 async function getGpuModel(): Promise<string> {
     const gl = document.createElement("canvas").getContext("webgl") as WebGLRenderingContext | null;
@@ -147,6 +176,7 @@ export function neofetch(): CommandResult[] {
     ];
     
 }
+
 
 interface numberClass {
     n: number

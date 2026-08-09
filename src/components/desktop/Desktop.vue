@@ -60,7 +60,7 @@ function highestZIndex(){
 
 <template>
   <section class="desktop">
-    <Wallpaper :wallpaperNumber="3"/>
+    <Wallpaper :wallpaperNumber="3" :top_offset="0"/>
     <Icons @open="openApp"/>
 
     <Window 

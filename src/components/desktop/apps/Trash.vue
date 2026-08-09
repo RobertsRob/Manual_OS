@@ -3,20 +3,22 @@
 </script>
 
 <template>
-    <div class="main">
+    <div class="main_bin">
         <span class="text">Trash🗑️🗑️</span>
     </div>
 </template>
 
 <style scoped>
-.main{
+.main_bin{
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(5px);
     font-size: 50px;
-    /* padding-top: 20px; */
+    overflow: hidden;
     font-weight: 600;
-    color: white;
+    color: rgb(255, 255, 255);
+    backdrop-filter: blur(5px);
+    background-color: #4f4f4f10;
+    text-align: center;
 }
 .text{
     position: relative;
