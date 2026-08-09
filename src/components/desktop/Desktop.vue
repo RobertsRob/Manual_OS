@@ -6,34 +6,15 @@ import Icons from './Icons.vue'
 import Window from './Window.vue'
 import type { Application } from "../../data/desktop"
 import { applications } from "../../data/desktop"
-
-// const openedApps = ref<Application[]>([])
-const props = defineProps<{
-  openedApps: Application[]
-  zIndex: number
-}>()
-
-let id = 0
-
-function openApp(app: Application) {
-  emit('increaseZ')
-  props.openedApps.push({
-    ...app,
-    id: id++,
-    zIndex: props.zIndex,
-    position: [...app.position] as [number, number],
-    size: [...app.size] as [number, number]
-  })
-}
-
-const emit = defineEmits<{
-  (e: 'close', app: Application): void
-  (e: 'increaseZ'): void
-}>()
+import { openApp } from '../../data/desktop'
+import { closeApp } from '../../data/desktop'
+import { increaseZ } from '../../data/desktop'
+import { zIndex } from '../../data/desktop'
+import { openedApps } from '../../data/desktop'
 
 function bringToTheFront(app: Application) {
-  emit('increaseZ')
-  app.zIndex = props.zIndex
+  increaseZ()
+  app.zIndex = zIndex.value
 }
 
 function bringToTheBack(app: Application) {
@@ -71,8 +52,8 @@ function part_screen(app: Application){
 }
 
 function highestZIndex(){
-    if(props.openedApps.length === 0) return -1
-    return Math.max(...props.openedApps.map(app => app.zIndex ?? 0))
+    if(openedApps.value.length === 0) return -1
+    return Math.max(...openedApps.value.map(app => app.zIndex ?? 0))
 }
 
 </script>
@@ -92,7 +73,7 @@ function highestZIndex(){
       :component="app.component"
       :position="app.position"
       :active="app.zIndex === highestZIndex()"
-      @close="emit('close', app)"
+      @close="closeApp(app)"
       @minimize="bringToTheBack(app)"
       @full_screen="maximize(app)"
       @part_screen="part_screen(app)"

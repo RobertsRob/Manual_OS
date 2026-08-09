@@ -1,30 +1,27 @@
 <script setup lang="ts">
 import TaskbarApp from './TaskbarApp.vue';
 import { type Application } from '../../data/desktop.ts';
+// import { openApp } from '../../data/desktop'
+// import { closeApp } from '../../data/desktop'
+import { increaseZ } from '../../data/desktop'
+import { zIndex } from '../../data/desktop'
+import { openedApps } from '../../data/desktop'
 
-const props = defineProps<{
-    openedApps: Application[]
-    zIndex: number
-}>()
 
 function taskbarAppClick(app: Application){
-    emit("increaseZ")
-    props.openedApps.forEach(appOpened => {
+    increaseZ()
+    openedApps.value.forEach(appOpened => {
         if(appOpened.id == app.id){
-            app.zIndex = props.zIndex
+            app.zIndex = zIndex.value
             app.minimized = false
         }
     });
 }
 
 function highestZIndex(){
-    if(props.openedApps.length === 0) return -1
-    return Math.max(...props.openedApps.map(app => app.zIndex ?? 0))
+    if(openedApps.value.length === 0) return -1
+    return Math.max(...openedApps.value.map(app => app.zIndex ?? 0))
 }
-
-const emit = defineEmits<{
-    (e: 'increaseZ'): void
-}>()
 
 </script>
 

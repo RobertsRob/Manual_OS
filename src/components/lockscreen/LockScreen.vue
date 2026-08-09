@@ -95,9 +95,7 @@
                         </div>
                     </div>
                     <button class="button" @mouseup="username.length >= 3 && emit('unlock', isManual, username)">Continue</button>
-                    
                 </div>
-                
             </div>
             
         </div>

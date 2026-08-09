@@ -5,22 +5,8 @@ import LockScreen from './components/lockscreen/LockScreen.vue'
 import { isManual, username } from './data/user.ts'
 
 import { ref } from "vue"
-import type { Application } from "./data/desktop.ts"
 
-
-const zIndex = ref(1)
-const openedApps = ref<Application[]>([])
 const activeOS = ref(false)
-
-function closeApp(app: Application) {
-  openedApps.value = openedApps.value.filter(
-    a => a.id !== app.id
-  )
-}
-
-function increaseZ() {
-  zIndex.value++
-}
 
 function handleUnlock(isMF: boolean, usern: string) {
   isManual.value = isMF
@@ -33,8 +19,8 @@ function handleUnlock(isMF: boolean, usern: string) {
 <template>
   <LockScreen :class="{ hidden: activeOS }" @unlock="handleUnlock" class="transitional" />
   <main class="os transitional" :class="{ visible: activeOS }">
-    <Desktop :openedApps="openedApps" :zIndex="zIndex" @close="closeApp" @increaseZ="increaseZ" />
-    <Taskbar :openedApps="openedApps" :zIndex="zIndex" @increaseZ="increaseZ" />
+    <Desktop />
+    <Taskbar />
   </main>
 </template>
 

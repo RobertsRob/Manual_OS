@@ -1,3 +1,4 @@
+import { ref } from "vue"
 import Trash from "../components/desktop/apps/Trash.vue"
 import WebBrowser from "../components/desktop/apps/WebBrowser.vue"
 import Notepad from "../components/desktop/apps/Notepad.vue"
@@ -16,6 +17,31 @@ export interface Application {
     component: any
     zIndex?: number
     minimized: boolean
+}
+
+export const zIndex = ref(1)
+const id = ref(0)
+export const openedApps = ref<Application[]>([])
+
+export function openApp(app: Application) {
+  zIndex.value++
+  openedApps.value.push({
+    ...app,
+    id: id.value++,
+    zIndex: zIndex.value,
+    position: [...app.position] as [number, number],
+    size: [...app.size] as [number, number]
+  })
+}
+
+export function closeApp(app: Application) {
+  openedApps.value = openedApps.value.filter(
+    a => a.id !== app.id
+  )
+}
+
+export function increaseZ(){
+    zIndex.value++
 }
 
 export const applications: Application[] = [
