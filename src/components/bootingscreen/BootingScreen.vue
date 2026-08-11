@@ -3,24 +3,31 @@
     import type { output_d } from './loadingUp';
     import { bootingUpLines } from './loadingUp';
     import { set_booting_screen_false } from '../../data/user';
+    import { shuttingDownLines } from './shuttingDown';
+    import { blueScreenLines } from './blueScreen';
+
+    const props = defineProps<{
+        outputTypeIndx: number 
+    }>()
     
     const output = ref<output_d[]>([])
     let current_command = 0
     const outputContainer = ref<HTMLElement | null>(null)
     const total_time = 5000
+    const outputLines = [bootingUpLines, shuttingDownLines, blueScreenLines][props.outputTypeIndx]
 
     let timeout: number
 
     function writeLine() {
-        if(current_command >= bootingUpLines.length) set_booting_screen_false()
-        output.value.push(bootingUpLines[current_command].opening_br)
-        output.value.push(bootingUpLines[current_command].message_type)
-        output.value.push(bootingUpLines[current_command].closing_br)
-        output.value.push(bootingUpLines[current_command].text)
+        if(current_command >= outputLines.length) set_booting_screen_false()
+        output.value.push({ output: "[" })
+        output.value.push(outputLines[current_command].message_type)
+        output.value.push({ output: "]" })
+        output.value.push(outputLines[current_command].text)
         output.value.push({output: "\n"})
 
         if (outputContainer.value) outputContainer.value.scrollTop = outputContainer.value.scrollHeight
-        let delay = bootingUpLines[current_command].perc * total_time
+        let delay = outputLines[current_command].perc * total_time
 
         current_command++
         timeout = window.setTimeout(writeLine, delay)

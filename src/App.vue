@@ -20,7 +20,7 @@ function handleUnlock(isMF: boolean, usern: string) {
 
 <template>
   <div class="booting_screen" :class="{hidden: !booting_screen}">
-    <BootingScreen />
+    <BootingScreen :outputTypeIndx="0"/>
   </div>
   <div class="os" :class="{ visible: !booting_screen }">
     <LockScreen :class="{ hidden: activeOS }" @unlock="handleUnlock" class="transitional" />
