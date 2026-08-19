@@ -27,13 +27,21 @@ function highestZIndex(){
 
 <template>
     <footer class="taskbar">
-        <TaskbarApp 
-            v-for="taskbarApp in openedApps"
-            :key="taskbarApp.name"
-            :taskbarApp="taskbarApp"
-            @mousedown="taskbarAppClick(taskbarApp)"
-            :active="taskbarApp.zIndex === highestZIndex()"
-        />
+        <div class="search_start">
+
+        </div>
+        <div class="taskbar_apps">
+            <TaskbarApp 
+                v-for="taskbarApp in openedApps"
+                :key="taskbarApp.name"
+                :taskbarApp="taskbarApp"
+                @mousedown="taskbarAppClick(taskbarApp)"
+                :active="taskbarApp.zIndex === highestZIndex()"
+            />  
+        </div>
+        <div class="time">
+            
+        </div>
     </footer>
 </template>
 

@@ -2,7 +2,7 @@
 import Desktop from './components/desktop/Desktop.vue'
 import Taskbar from './components/taskbar/Taskbar.vue'
 import LockScreen from './components/lockscreen/LockScreen.vue'
-import { isManual, username, booting_screen } from './data/user.ts'
+import { isManual, username, booting_screen, booting_output_type_indx } from './data/user.ts'
 import BootingScreen from './components/bootingscreen/BootingScreen.vue'
 
 import { ref } from "vue"
@@ -20,7 +20,7 @@ function handleUnlock(isMF: boolean, usern: string) {
 
 <template>
   <div class="booting_screen" :class="{hidden: !booting_screen}">
-    <BootingScreen :outputTypeIndx="0"/>
+    <BootingScreen :outputTypeIndx="booting_output_type_indx"/>
   </div>
   <div class="os" :class="{ visible: !booting_screen }">
     <LockScreen :class="{ hidden: activeOS }" @unlock="handleUnlock" class="transitional" />

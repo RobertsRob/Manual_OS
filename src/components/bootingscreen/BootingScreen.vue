@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import { onMounted, onUnmounted, ref } from 'vue';
+    import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
     import type { output_d } from './loadingUp';
     import { bootingUpLines } from './loadingUp';
     import { set_booting_screen_false } from '../../data/user';
     import { shuttingDownLines } from './shuttingDown';
     import { blueScreenLines } from './blueScreen';
+    import { booting_screen } from '../../data/user';
 
     const props = defineProps<{
         outputTypeIndx: number 
@@ -14,18 +15,21 @@
     let current_command = 0
     const outputContainer = ref<HTMLElement | null>(null)
     const total_time = 5000
-    const outputLines = [bootingUpLines, shuttingDownLines, blueScreenLines][props.outputTypeIndx]
+    let outputLines = [bootingUpLines, shuttingDownLines, blueScreenLines][props.outputTypeIndx]
 
     let timeout: number
 
-    function writeLine() {
-        if(current_command >= outputLines.length) set_booting_screen_false()
+    async function writeLine() {
+        if(current_command >= outputLines.length && props.outputTypeIndx === 0) {
+            set_booting_screen_false()
+        }
         output.value.push({ output: "[" })
         output.value.push(outputLines[current_command].message_type)
         output.value.push({ output: "]" })
         output.value.push(outputLines[current_command].text)
         output.value.push({output: "\n"})
 
+        await nextTick()
         if (outputContainer.value) outputContainer.value.scrollTop = outputContainer.value.scrollHeight
         let delay = outputLines[current_command].perc * total_time
 
@@ -35,6 +39,14 @@
     
     onMounted(() => {
         writeLine()
+        watch(booting_screen, (newValue, oldValue) => {
+            console.log('count changed:', oldValue, '→', newValue)
+            output.value = []
+            outputLines = [bootingUpLines, shuttingDownLines, blueScreenLines][props.outputTypeIndx]
+            current_command = 0 
+            clearTimeout(timeout)
+            writeLine()
+        })
     })
 
     onUnmounted(() => {
