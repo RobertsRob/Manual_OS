@@ -34,7 +34,14 @@ watch(() => props.active, () => {
     } else terminal_parts.value.pop()
 })
 
-function addTerminalPart(text: string, className?: string) {
+const progress = ref<{ text: string, class?: string } | null>(null)
+
+function wait(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function addTerminalPart(text: string, className?: string, delay?: number) {
+    if(delay) await wait(delay);
     terminal_parts.value.push({
         text: text,
         class: className
@@ -92,7 +99,7 @@ onUnmounted(() => {
     window.removeEventListener('keydown', handleKey)
 })
 
-function runCommand() {
+async function runCommand() {
     terminal_parts.value.pop()
     addTerminalPart("\n")
 
@@ -101,12 +108,31 @@ function runCommand() {
     cur_viewing_com.value = previous_commands.value.length - 1
 
     const com = command.value as keyof typeof listCommands
-    if (com in listCommands) {
-        let output = listCommands[com]()
+    const command_first_word = command.value.trim().split(/\s+/)[0]
+    const command_second_word = command.value.trim().split(/\s+/)[1]
+    const is_instalation = command_first_word === "install"
+    if (com in listCommands || is_instalation) {
+        let output
+        if(is_instalation) output = listCommands[command_first_word][0](command_second_word)
+        else output = listCommands[com][0]()
         if (Array.isArray(output)) {
-            output.forEach(item => {
-                addTerminalPart(item.output, item.class)
-            })
+            for (const item of output) {
+                if (item.class === "progress-bar") {
+                    if (item.delay) await wait(item.delay)
+                    progress.value = { text: item.output, class: item.class }
+                    scrollDown()
+                } else {
+                    if (progress.value) {
+                        terminal_parts.value.push({ text: progress.value.text, class: progress.value.class })
+                        progress.value = null
+                    }
+                    await addTerminalPart(item.output, item.class, item.delay)
+                }
+            }
+            if (progress.value) {
+                terminal_parts.value.push({ text: progress.value.text, class: progress.value.class })
+                progress.value = null
+            }
             addTerminalPart("\n")
         } else addTerminalPart(output.output + "\n", output.class)
     }
@@ -128,6 +154,7 @@ function runCommand() {
 <template>
     <div class="main" ref="terminal_ref">
         <span v-for="(part, i) in terminal_parts" :key="i" :class="part.class">{{ part.text }}</span>
+        <span v-if="progress" :class="progress.class">{{ progress.text }}</span>
     </div>
 
 </template>

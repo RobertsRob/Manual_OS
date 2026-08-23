@@ -3,35 +3,62 @@ import { version, uptime } from "./user"
 import { openApp } from "./desktop"
 import { applications } from "./desktop"
 import { show_booting_screewn_with } from "./user"
+import { installed } from "./instalations"
 
 interface CommandResult {
     output: string
     class?: string
+    delay?: number
 }
 interface CommandFunction {
-    (): CommandResult | CommandResult[]
+    (par?: string): CommandResult | CommandResult[]
 }
 
-export const listCommands: Record<string, CommandFunction> = {
-    help,
-    neofetch,
-    shutdown,
-    explorer,
-    web,
-    notepad,
-    trash,
-    terminal,
+export const listCommands: Record<string, [CommandFunction, boolean]> = {
+    help: [help, true],
+    neofetch: [neofetch, true],
+    shutdown: [shutdown, true],
+    explorer: [explorer, true],
+    web: [web, true],
+    notepad: [notepad, true],
+    trash: [trash, true],
+    terminal: [terminal, true],
+    install: [install, false]
 } as const
 
 
+function progressBar(percent: number, width = 50): string {
+    const filled = Math.round((percent / 100) * width)
+    const empty = width - filled
+    return `[${"█".repeat(filled)}${" ".repeat(empty)}][${percent}%]`
+}
+
+export function install(package_name?: string): CommandResult | CommandResult[] {
+    if (package_name === undefined) return { output: "Missing package name to install", class: "error" }
+    if (!(package_name in installed.value)) return { output: "Package was not found", class: "error" }
+    if (installed.value[package_name] === true) return { output: "Package is already installed" }
+    installed.value[package_name] = true
+
+    let output: CommandResult[] = [{ output: "Installing " + package_name + "...\n" }]
+
+    const steps = 50
+    for (let i = 1; i <= steps; i++) {
+        const percent = Math.round((i / steps) * 100)
+        output.push({ output: progressBar(percent), class: "progress-bar", delay: 30 })
+    }
+
+    output.push({ output: `\n${package_name} installed.`, delay: 200 })
+    return output
+}
 
 export function help(): CommandResult {
     let commandListArray = Object.keys(listCommands)
     let output = "ManualOS terminal, " + version + " (x86_64-pc-manual-os) \nCommand list: \n"
     commandListArray.forEach(command => {
-        output += "  " + command + "\n"
+        if(listCommands[output][1]) output += "  " + command + "\n"
     });
-    return {output: output.slice(0, -1)}
+    output += "  install <package-name>"
+    return {output: output}
 }
 
 export function explorer(): CommandResult {
