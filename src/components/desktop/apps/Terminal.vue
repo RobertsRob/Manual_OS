@@ -18,11 +18,11 @@ const default_prefix = ref(username.value + "@manual-os:" + path.value + "$ ")
 const terminal_ref = ref<HTMLElement | null>(null)
 
 const terminal_parts = ref<TerminalPart[]>([])
-const previous_comamnds = ref<string[]>([])
+const previous_commands = ref<string[]>([])
 const cur_viewing_com = ref(0)
 
 onMounted(() => {
-    previous_comamnds.value.push("")
+    previous_commands.value.push("")
     addTerminalPart(default_prefix.value, "prefix")
     addTerminalPart(command.value)
     addTerminalPart("█")
@@ -65,18 +65,18 @@ function handleKey(event: KeyboardEvent) {
             return
         case "ArrowUp":
             cur_viewing_com.value = cur_viewing_com.value > 0 ? cur_viewing_com.value - 1 : 0
-            command.value = previous_comamnds.value[cur_viewing_com.value]
+            command.value = previous_commands.value[cur_viewing_com.value]
             break
         case "ArrowDown":
-            cur_viewing_com.value = cur_viewing_com.value < previous_comamnds.value.length - 1 ? cur_viewing_com.value + 1 : previous_comamnds.value.length - 1
-            command.value = previous_comamnds.value[cur_viewing_com.value]
+            cur_viewing_com.value = cur_viewing_com.value < previous_commands.value.length - 1 ? cur_viewing_com.value + 1 : previous_commands.value.length - 1
+            command.value = previous_commands.value[cur_viewing_com.value]
             break
 
         default:
             if (event.key.length === 1) { command.value += event.key }
     }
-    if(cur_viewing_com.value === previous_comamnds.value.length - 1)
-    previous_comamnds.value[previous_comamnds.value.length - 1] = command.value
+    if(cur_viewing_com.value === previous_commands.value.length - 1)
+    previous_commands.value[previous_commands.value.length - 1] = command.value
     terminal_parts.value.pop()
     terminal_parts.value.pop()
     addTerminalPart(command.value)
@@ -96,8 +96,9 @@ function runCommand() {
     terminal_parts.value.pop()
     addTerminalPart("\n")
 
-    previous_comamnds.value.push("")
-    cur_viewing_com.value = previous_comamnds.value.length - 1
+    previous_commands.value[previous_commands.value.length - 1] = command.value
+    previous_commands.value.push("")
+    cur_viewing_com.value = previous_commands.value.length - 1
 
     const com = command.value as keyof typeof listCommands
     if (com in listCommands) {
@@ -119,7 +120,7 @@ function runCommand() {
     addTerminalPart(default_prefix.value, "prefix")
     addTerminalPart(command.value)
     addTerminalPart("█")
-
+    console.log(previous_commands.value)
 }
 
 </script>
