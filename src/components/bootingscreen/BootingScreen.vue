@@ -13,7 +13,7 @@
     const output = ref<output_d[]>([])
     let current_command = 0
     const outputContainer = ref<HTMLElement | null>(null)
-    const total_time = 5000
+    const total_time = 4500
     const outputLines = [bootingUpLines, shuttingDownLines, blueScreenLines][props.outputTypeIndx]
 
     let timeout: number
