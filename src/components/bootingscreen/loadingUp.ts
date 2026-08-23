@@ -25,7 +25,6 @@ export const bootingUpLines: output_line[] = [
     { opening_br: { output: "[" }, message_type: { output: "INFO" }, closing_br: { output: "]" }, text: { output: "Running memory self-test..." }, perc: 0.001803 },
     { opening_br: { output: "[" }, message_type: { output: "SUCCESS", color_class: "success" }, closing_br: { output: "]" }, text: { output: "Memory test passed: 32768MB OK" }, perc: 0.000793 },
     { opening_br: { output: "[" }, message_type: { output: "WARNING", color_class: "warning" }, closing_br: { output: "]" }, text: { output: "Memory module in slot B2 running below rated speed" }, perc: 0.002575 },
-    { opening_br: { output: "[" }, message_type: { output: "INFO" }, closing_br: { output: "]" }, text: { output: "Enabling ECC memory protection..." }, perc: 0.003592 },
     { opening_br: { output: "[" }, message_type: { output: "SUCCESS", color_class: "success" }, closing_br: { output: "]" }, text: { output: "ECC protection enabled" }, perc: 0.001374 },
     { opening_br: { output: "[" }, message_type: { output: "INFO" }, closing_br: { output: "]" }, text: { output: "Initializing interrupt controller..." }, perc: 0.005066 },
     { opening_br: { output: "[" }, message_type: { output: "SUCCESS", color_class: "success" }, closing_br: { output: "]" }, text: { output: "APIC initialized, 24 IRQ lines mapped" }, perc: 0.001112 },

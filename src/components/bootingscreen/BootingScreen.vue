@@ -17,6 +17,7 @@
     const total_time = 5000
     let outputLines = [bootingUpLines, shuttingDownLines, blueScreenLines][props.outputTypeIndx]
 
+
     let timeout: number
 
     async function writeLine() {
