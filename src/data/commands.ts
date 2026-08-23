@@ -2,6 +2,7 @@
 import { version, uptime } from "./user"
 import { openApp } from "./desktop"
 import { applications } from "./desktop"
+import { show_booting_screewn_with } from "./user"
 
 interface CommandResult {
     output: string
@@ -14,10 +15,7 @@ interface CommandFunction {
 export const listCommands: Record<string, CommandFunction> = {
     help,
     neofetch,
-    shutdown: () => {
-        console.log("shutdown called")
-        return {output: "shutdown called"}
-    },
+    shutdown,
     explorer,
     web,
     notepad,
@@ -75,6 +73,11 @@ export function terminal(): CommandResult {
         return { output: "" };
     }
     return {output: "Failed to open app", class: "error_white"}
+}
+
+export function shutdown(): CommandResult {
+    show_booting_screewn_with(1)
+    return {output: "Shutting down"}
 }
 
 
