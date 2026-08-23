@@ -6,6 +6,7 @@ import { type Application } from '../../data/desktop.ts';
 import { increaseZ } from '../../data/desktop'
 import { zIndex } from '../../data/desktop'
 import { openedApps } from '../../data/desktop'
+import ManualOSLogo from "../../assets/ManualOS_nbg.png"
 
 
 function taskbarAppClick(app: Application){
@@ -27,8 +28,10 @@ function highestZIndex(){
 
 <template>
     <footer class="taskbar">
-        <div class="search_start">
-
+        <div class="start">
+            <div class="start_button">
+                <img class="start_button_image" :src="ManualOSLogo" alt="start button image">
+            </div>
         </div>
         <div class="taskbar_apps">
             <TaskbarApp 
@@ -40,7 +43,7 @@ function highestZIndex(){
             />  
         </div>
         <div class="time">
-            
+
         </div>
     </footer>
 </template>
@@ -51,5 +54,13 @@ function highestZIndex(){
     width: 100%;
     height: clamp(40px, 5vh, 70px);
     user-select: none;
+}
+.start_button{
+    height: clamp(40px, 5vh, 70px);
+    width: clamp(40px, 5vh, 70px);
+    aspect-ratio: calc(1 / 1);
+}
+.start_button_image{
+    
 }
 </style>
