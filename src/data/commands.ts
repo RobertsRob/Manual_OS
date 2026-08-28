@@ -55,7 +55,7 @@ export function help(): CommandResult {
     let commandListArray = Object.keys(listCommands)
     let output = "ManualOS terminal, " + version + " (x86_64-pc-manual-os) \nCommand list: \n"
     commandListArray.forEach(command => {
-        if(listCommands[output][1]) output += "  " + command + "\n"
+        if(listCommands[command][1]) output += "  " + command + "\n"
     });
     output += "  install <package-name>"
     return {output: output}

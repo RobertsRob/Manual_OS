@@ -3,14 +3,14 @@ import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { username } from '../../../data/user';
 import { listCommands, notFound } from '../../../data/commands';
 
-const props = defineProps<{
-    active: boolean
-}>()
-
 interface TerminalPart {
     text: string
     class?: string
 }
+const props = defineProps<{
+    active: boolean
+    initial_text?: string
+}>()
 
 const command = ref("")
 const path = ref("~")
@@ -23,6 +23,7 @@ const cur_viewing_com = ref(0)
 
 onMounted(() => {
     previous_commands.value.push("")
+    if(props.initial_text) addTerminalPart(props.initial_text + "\n")
     addTerminalPart(default_prefix.value, "prefix")
     addTerminalPart(command.value)
     addTerminalPart("█")

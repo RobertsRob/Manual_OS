@@ -73,6 +73,7 @@ function highestZIndex(){
       :component="app.component"
       :position="app.position"
       :active="app.zIndex === highestZIndex()"
+      :initial_text="app.initial_text"
       @close="closeApp(app)"
       @minimize="bringToTheBack(app)"
       @full_screen="maximize(app)"

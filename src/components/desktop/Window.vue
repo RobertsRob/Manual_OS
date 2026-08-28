@@ -13,6 +13,7 @@ const props = defineProps<{
     zIndex?: number
     component: Component
     active: boolean
+    initial_text?: string
 }>()
 
 const dragging = ref(false)
@@ -93,7 +94,7 @@ function full_part_screen(){
                 <div class="close" @click="emit('close')"><img class="icon_window" :src="closeImage" draggable="false"></div>
             </div>
         </header>
-        <component :is="component" :active="props.active"/>
+        <component :is="component" :active="props.active" :initial_text="initial_text"/>
     </div>
 </template>
 
