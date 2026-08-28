@@ -4,6 +4,9 @@ import type { Component } from 'vue';
 import fullPartImage from "../../assets/full_part.png"
 import minimize from "../../assets/minimize.png"
 import closeImage from "../../assets/close.png"
+import { openTerminal } from '../../data/desktop';
+import { installed } from '../../data/instalations';
+import { isManual } from '../../data/user';
 
 const props = defineProps<{
     title: string
@@ -31,6 +34,12 @@ function move(event: MouseEvent) {
 }
 
 function startDrag(event: MouseEvent) {
+    if(!installed.value["drag_window"] && isManual.value){
+        emit("timeoutApp")
+        openTerminal(`Package drag_window was not found! \nInstall it by typing:\n    install drag_window`)
+        return
+    }
+        
     dragging.value = true
     startPos.value = [
         event.clientX ,
@@ -57,9 +66,16 @@ const emit = defineEmits<{
     (e: 'minimize'): void
     (e: 'full_screen'): void
     (e: 'part_screen'): void
+    (e: 'timeoutApp'): void
 }>()
 
 function full_part_screen(){
+    if(!installed.value["maximize_window"] && isManual.value){
+        emit("timeoutApp")
+        openTerminal(`Package maximize_window was not found! \nInstall it by typing:\n    install maximize_window`)
+        return
+    }
+        
     isMaximized.value = !isMaximized.value
     if(isMaximized.value){
         nonMaxPos.value = position.value;

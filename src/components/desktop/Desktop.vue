@@ -11,13 +11,24 @@ import { closeApp } from '../../data/desktop'
 import { increaseZ } from '../../data/desktop'
 import { zIndex } from '../../data/desktop'
 import { openedApps } from '../../data/desktop'
+import { openTerminal } from '../../data/desktop';
+import { installed } from '../../data/instalations';
+import { timeoutApp } from '../../data/desktop'
+import { isManual } from '../../data/user.ts'
 
 function bringToTheFront(app: Application) {
+  if(app.timeout) return
   increaseZ()
   app.zIndex = zIndex.value
 }
 
 function bringToTheBack(app: Application) {
+  if(!installed.value["minimize_window"] && isManual.value){
+    timeoutApp(app)
+    openTerminal(`Package minimize_window was not found! \nInstall it by typing:\n    install minimize_window`)
+    return
+  }
+    
   app.minimized = true
   app.zIndex = -1
 }
@@ -79,6 +90,7 @@ function highestZIndex(){
       @full_screen="maximize(app)"
       @part_screen="part_screen(app)"
       @mousedown="bringToTheFront(app)"
+      @timeoutApp="timeoutApp(app)"
     />
   </section>
 </template>

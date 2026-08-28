@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Application } from '../../data/desktop'
+import { installed } from '../../data/instalations';
+import { isManual } from '../../data/user';
+import { openTerminal } from '../../data/desktop';
 
 const props = defineProps<{
   icon: Application 
@@ -22,6 +25,10 @@ function move(event: MouseEvent) {
 }
 
 function startDrag(event: MouseEvent) {
+    if(!installed.value["drag_icon"] && isManual.value){
+        openTerminal(`Package drag_icon was not found! \nInstall it by typing:\n    install drag_icon`)
+        return
+    }
     dragging.value = true
     startPos.value = [
         event.clientX / window.innerHeight * 100,

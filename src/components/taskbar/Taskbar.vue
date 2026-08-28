@@ -8,6 +8,10 @@ import { zIndex } from '../../data/desktop'
 import { openedApps } from '../../data/desktop'
 import ManualOSLogo from "../../assets/ManualOS_nbg.png"
 import { ref, onMounted, onUnmounted } from 'vue';
+import { installed } from '../../data/instalations.ts';
+import { isManual } from '../../data/user.ts';
+import { timeoutApp } from '../../data/desktop.ts';
+import { openTerminal } from '../../data/desktop.ts';
 
 const time = ref('')
 const date = ref('')
@@ -15,6 +19,11 @@ const date = ref('')
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 function taskbarAppClick(app: Application){
+    if(!installed.value["unminimize_window"] && isManual.value){
+        timeoutApp(app)
+        openTerminal(`Package unminimize_window was not found! \nInstall it by typing:\n    install unminimize_window`)
+        return
+    }
     increaseZ()
     openedApps.value.forEach(appOpened => {
         if(appOpened.id == app.id){

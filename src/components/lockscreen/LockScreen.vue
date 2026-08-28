@@ -4,7 +4,7 @@
 
     const height = window.innerHeight;
     const verPos = ref(0)
-    const isManual = ref(false)
+    const isManual = ref(true)
     const username = ref("");
 
     const revealed = ref(false)
