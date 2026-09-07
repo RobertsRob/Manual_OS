@@ -1,10 +1,21 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+
+const props = defineProps<{
+    initial_text?: string
+}>()
+
+const content = ref("")
+
+onMounted(() => {
+    if(props.initial_text) content.value = props.initial_text
+})
 
 </script>
 
 <template>
    <div class="text_screen">
-        <textarea placeholder="Start typing..." autofocus></textarea>
+        <textarea placeholder="Start typing..." autofocus>{{content}}</textarea>
     </div>
 </template>
 

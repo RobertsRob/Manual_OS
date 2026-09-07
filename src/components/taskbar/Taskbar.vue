@@ -120,6 +120,7 @@ onUnmounted(() => {
     width: calc(94% - clamp(40px, 5vh, 70px));
     height: clamp(40px, 5vh, 70px);
     user-select: none;
+    overflow: hidden;
     /* background-color: #fff; */
 }
 .time{

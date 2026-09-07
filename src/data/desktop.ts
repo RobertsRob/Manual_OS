@@ -51,7 +51,7 @@ function appPosAndOffset(pos: [number, number]){
   return [pos[0] + startPosOffset[0], pos[1] + startPosOffset[1]]
 }
 
-export function openApp(app: Application) {
+export function openApp(app: Application, init_text_app?:string) {
   if(!installed.value[app.package_name] && isManual.value){
     const terminalApp = applications.find(a => a.name === "Terminal")
     const initial_text = `Package ${app.package_name} was not found! \nInstall it by typing:\n    install ${app.package_name}`
@@ -75,6 +75,7 @@ export function openApp(app: Application) {
       zIndex: zIndex.value,
       position: appPosAndOffset(app.position) as [number, number],
       size: [...app.size] as [number, number],
+      initial_text: init_text_app,
       timeout: false
     })
   }

@@ -4,7 +4,7 @@
 
     const height = window.innerHeight;
     const verPos = ref(0)
-    const isManual = ref(true)
+    const isManual = ref(false)
     const username = ref("");
 
     const revealed = ref(false)
@@ -84,7 +84,7 @@
         <div class="choices" :class="{ clear: verPos === 0 }">
             <div class="middle">
                 <div class="input_part">
-                    <input ref="usernameInput" v-model="username" placeholder="Enter username" type="text" class="input" :readonly="inputDisabled" maxlength="22">
+                    <input ref="usernameInput" v-model="username" placeholder="Enter username (min 3)" type="text" class="input" :readonly="inputDisabled" maxlength="22">
                     <div class="line"></div>
                     <div class="choiceMode">
                         <div class="everythingManual" :class="{ active: isManual }" @click="isManual = true" >

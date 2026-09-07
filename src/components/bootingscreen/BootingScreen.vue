@@ -37,8 +37,17 @@
         current_command++
         timeout = window.setTimeout(writeLine, delay)
     }
+
+    function handleKey(event: KeyboardEvent) {
+        switch (event.key) {
+            case "Escape":
+                current_command = outputLines.length
+                break
+        }
+    }
     
     onMounted(() => {
+        window.addEventListener('keydown', handleKey)
         writeLine()
         watch(booting_screen, (newValue, oldValue) => {
             console.log('count changed:', oldValue, '→', newValue)
@@ -52,8 +61,8 @@
 
     onUnmounted(() => {
         clearTimeout(timeout)
+        window.removeEventListener('keydown', handleKey)
     })
-
     
 </script>
 
