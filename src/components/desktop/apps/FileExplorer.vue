@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import forwardImage from "../../../assets/forward.png"
 import { folders } from "./FileExplorerData";
-import { onMounted, ref } from "vue"
+import { onMounted, onUnmounted, ref } from "vue"
 import { openApp } from "../../../data/desktop";
 import { applications } from "../../../data/desktop";
+import type{ File, Folder } from "./FileExplorerData";
 
-const selectedFolderIndex = ref(0)
+const props = defineProps<{
+    active: boolean
+}>()
+
 const selectedFolder = ref(folders[0])
-
-onMounted(() => {
-    selectedFolder.value = folders[selectedFolderIndex.value]
+const selectedOption = ref({
+    path: false,
+    search: false,
 })
+
+const pathValue = ref(selectedFolder.value.name)
+const searchValue = ref("")
+const emptyFolderText = ref("")
 
 function fileTypeImage(type: string){
     if(type == "txt") return "https://cdn-icons-png.flaticon.com/512/1263/1263942.png"
@@ -18,10 +26,68 @@ function fileTypeImage(type: string){
     else return "https://cdn-icons-png.flaticon.com/512/101/101671.png"
 }
 
-function selectFolder(index: number){
-    selectedFolderIndex.value = index
-    selectedFolder.value = folders[selectedFolderIndex.value]
+function selectFolder(folder: any){
+    selectedFolder.value = folder
+    pathValue.value = selectedFolder.value.name
+    if(selectedFolder.value.content.length === 0)
+        emptyFolderText.value = "Nothing here"
+    else emptyFolderText.value = ""
 }
+
+function searchFiles(search: string){
+    let searchFolder = {
+        name: 'Search "' + search + '" ',
+        content: [] as File[]
+    }
+    let matchedFiles: File[] = [];
+    for (let i = 0; i < folders.length; i++) {
+        const folder = folders[i];
+        for (let j = 0; j < folder.content.length; j++) {
+            const file = folder.content[j];
+            if(file.name === search) matchedFiles.unshift(file)
+            else if (file.name.includes(search)) matchedFiles.push(file)
+        }
+    }
+    searchFolder.content = matchedFiles
+    selectedFolder.value = searchFolder as Folder
+    pathValue.value = selectedFolder.value.name
+    if(selectedFolder.value.content.length === 0)
+        emptyFolderText.value = "Nothing found!"
+    else emptyFolderText.value = ""
+}
+
+function goToPath(path: string){
+    let resF = folders.find(a => a.name === path)
+    if(resF) selectedFolder.value = resF
+    else pathValue.value = selectedFolder.value.name
+    if(selectedFolder.value.content.length === 0)
+        emptyFolderText.value = "Nothing here"
+    else emptyFolderText.value = ""
+}
+
+function handleKey(event: KeyboardEvent) {
+    if(!props.active) return
+    switch (event.key) {
+        case "Enter":
+            if(selectedOption.value.path) goToPath(pathValue.value)
+            if(selectedOption.value.search) searchFiles(searchValue.value)
+            break
+    }
+}
+
+function openFile(file: File){
+    if(file.type === "txt") openApp(applications[2], file.content)
+    if(file.type === "png") openApp(applications[5], file.content)
+}
+
+onMounted(() => {
+    selectedFolder.value = folders[0]
+    window.addEventListener('keydown', handleKey)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKey)
+})
 
 </script>
 
@@ -29,23 +95,25 @@ function selectFolder(index: number){
     <div class="main_expl">
         <div class="top_part">
             <img class="back_button" :src="forwardImage" draggable="false">
-            <img class="forward_button" :src="forwardImage" draggable="false">
-            <input class="path_input" placeholder="Path" :value="selectedFolder.name" type="text" name="path" id="path">
-            <input class="search_input" placeholder="Search..." type="text" name="search" id="search">
+            <img class="forward_button" :src="forwardImage" draggable="false"> 
+            <input class="path_input" placeholder="Path" type="text" name="path" id="path" @focus="selectedOption.path = true" @blur="selectedOption.path = false" v-model="pathValue">
+            <input class="search_input" placeholder="Search..." type="text" name="search" id="search" @focus="selectedOption.search = true" @blur="selectedOption.search = false" v-model="searchValue">
         </div>
         <div class="bottom_part">
             <div class="map_choice">
-                <div class="folder" v-for="(folder, index) in folders" @click="selectFolder(index)">
+                <div class="folder" v-for="folder in folders" @click="selectFolder(folder)">
                     <img class="folder_icon" :src="folder.icon" alt="folder icon">
                     <span class="folder_name">{{folder.name}}</span>
                 </div>
             </div>
             <div class="main_content">
-                <div class="file" v-for="file in selectedFolder.content" @dblclick="openApp(applications[2], file.content)">
+                <div class="file" v-for="file in selectedFolder.content" @dblclick="openFile(file)">
                     <img class="file_icon" :src="fileTypeImage(file.type)" alt="file icon" draggable="false">
                     <span class="file_name">{{file.name}}</span>
                 </div>
+                <div class="centeredText">{{emptyFolderText}}</div>
             </div>
+            
         </div>
     </div>
     
@@ -78,7 +146,6 @@ function selectFolder(index: number){
     box-sizing: border-box;
 }
 .bottom_part{
-    /* backdrop-filter: blur(5px); */
     display: flex;
     width: 100%;
     height: 93%;
@@ -86,16 +153,14 @@ function selectFolder(index: number){
 .map_choice{
     width: 30%;
     height: 100%;
-    /* background-color: #ffffff56; */
 }
 .main_content {
     width: 70%;
     height: 100%;
-    /* background-color: #4343430e; */
     display: grid;
     grid-template-columns: repeat(auto-fill, 70px);
     grid-auto-rows: 80px;
-    gap: 10px;
+    gap: 20px;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
@@ -165,8 +230,8 @@ function selectFolder(index: number){
     font-size: 20px;
 }
 .file {
-    height: 70px;
-    width: 70px;
+    height: 80px;
+    width: 80px;
     padding: 5px;
     overflow: hidden;
     display: flex;
@@ -190,5 +255,14 @@ function selectFolder(index: number){
     margin-top: 3px;
     font-size: 13px;
     line-height: 16px;
+}
+.centeredText{
+    margin: 20px;
+    width: 400px;
+    height: 100px;
+    font-size: 30px;
+    text-align: left;
+    font-family: "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace;
+    color: rgba(251, 251, 251, 0.866);
 }
 </style>

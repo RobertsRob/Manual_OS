@@ -6,6 +6,7 @@ import FileExplorer from "../components/desktop/apps/FileExplorer.vue"
 import Terminal from "../components/desktop/apps/Terminal.vue"
 import { installed } from "./instalations.ts"
 import { isManual } from "./user.ts"
+import ImageViewer from "../components/desktop/apps/ImageViewer.vue"
 
 export let startPosOffset = [0, 0]
 const startOffsetInc = 30
@@ -120,20 +121,20 @@ export function timeoutApp(app: Application) {
 }
 
 export const applications: Application[] = [
-    {
-        name: "Trash bin",
-        package_name: "trash",
-        render: true,
-        src: "https://cdn-icons-png.flaticon.com/512/4021/4021663.png",
-        shortcut: "C/abc/abcd",
-        position_shortcut: [0, 0] as [number, number],
-        position: [100, 100] as [number, number],
-        size: [800, 600] as [number, number],
-        component: Trash,
-        zIndex: 5,
-        minimized: false,
-    },
-    {
+  {
+    name: "Trash bin",
+    package_name: "trash",
+    render: true,
+    src: "https://cdn-icons-png.flaticon.com/512/4021/4021663.png",
+    shortcut: "C/abc/abcd",
+    position_shortcut: [0, 0] as [number, number],
+    position: [100, 100] as [number, number],
+    size: [800, 600] as [number, number],
+    component: Trash,
+    zIndex: 5,
+    minimized: false,
+  },
+  {
     name: "Web browser",
     package_name: "web",
     render: true,
@@ -145,8 +146,8 @@ export const applications: Application[] = [
     component: WebBrowser,
     zIndex: 5,
     minimized: false,
-    },
-    {
+  },
+  {
     name: "Notepad",
     package_name: "notepad",
     render: true,
@@ -158,8 +159,8 @@ export const applications: Application[] = [
     component: Notepad,
     zIndex: 5,
     minimized: false,
-    },
-    {
+  },
+  {
     name: "File Explorer",
     package_name: "explorer",
     render: true,
@@ -171,8 +172,8 @@ export const applications: Application[] = [
     component: FileExplorer,
     zIndex: 5,
     minimized: false,
-    },
-    {
+  },
+  {
     name: "Terminal",
     package_name: "terminal",
     render: true,
@@ -184,5 +185,18 @@ export const applications: Application[] = [
     component: Terminal,
     zIndex: 5,
     minimized: false,
-    }
+  },
+  {
+    name: "Image Viewer",
+    package_name: "image_viewer",
+    render: false,
+    src: "https://images.icon-icons.com/1381/PNG/512/multimediaphotoviewer_94421.png",
+    shortcut: "C/abdc/abc",
+    position_shortcut: [0, 38] as [number, number],
+    position: [100, 100] as [number, number],
+    size: [600, 600] as [number, number],
+    component: ImageViewer,
+    zIndex: 5,
+    minimized: false,
+  }
 ]
