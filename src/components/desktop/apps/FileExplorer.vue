@@ -19,6 +19,8 @@ const selectedOption = ref({
 const pathValue = ref(selectedFolder.value.name)
 const searchValue = ref("")
 const emptyFolderText = ref("")
+const visitedFolders = ref<{content: string, type: string}[]>([])
+const historyIndex = ref(-1)
 
 function fileTypeImage(type: string){
     if(type == "txt") return "https://cdn-icons-png.flaticon.com/512/1263/1263942.png"
@@ -29,6 +31,7 @@ function fileTypeImage(type: string){
 function selectFolder(folder: any){
     selectedFolder.value = folder
     pathValue.value = selectedFolder.value.name
+    pushHistory(selectedFolder.value.name, "folder")
     if(selectedFolder.value.content.length === 0)
         emptyFolderText.value = "Nothing here"
     else emptyFolderText.value = ""
@@ -48,6 +51,7 @@ function searchFiles(search: string){
             else if (file.name.includes(search)) matchedFiles.push(file)
         }
     }
+    pushHistory(searchFolder.name, "search")
     searchFolder.content = matchedFiles
     selectedFolder.value = searchFolder as Folder
     pathValue.value = selectedFolder.value.name
@@ -56,10 +60,15 @@ function searchFiles(search: string){
     else emptyFolderText.value = ""
 }
 
-function goToPath(path: string){
+function goToPath(path: string, addToHistory: boolean){
     let resF = folders.find(a => a.name === path)
-    if(resF) selectedFolder.value = resF
-    else pathValue.value = selectedFolder.value.name
+    if(resF) {
+        selectedFolder.value = resF 
+        pathValue.value = selectedFolder.value.name
+        if(addToHistory) {
+            pushHistory(selectedFolder.value.name, "folder")
+        }
+    } else pathValue.value = selectedFolder.value.name
     if(selectedFolder.value.content.length === 0)
         emptyFolderText.value = "Nothing here"
     else emptyFolderText.value = ""
@@ -69,7 +78,7 @@ function handleKey(event: KeyboardEvent) {
     if(!props.active) return
     switch (event.key) {
         case "Enter":
-            if(selectedOption.value.path) goToPath(pathValue.value)
+            if(selectedOption.value.path) goToPath(pathValue.value, true)
             if(selectedOption.value.search) searchFiles(searchValue.value)
             break
     }
@@ -80,9 +89,36 @@ function openFile(file: File){
     if(file.type === "png") openApp(applications[5], file.content)
 }
 
+function goBackHistory(){
+    if(historyIndex.value <= 0) return
+    historyIndex.value--
+    navigateToHistoryEntry(visitedFolders.value[historyIndex.value])
+}
+
+function goForwardHistory(){
+    if(historyIndex.value >= visitedFolders.value.length - 1) return
+    historyIndex.value++
+    navigateToHistoryEntry(visitedFolders.value[historyIndex.value])
+}
+
+function navigateToHistoryEntry(entry: {content: string, type: string}){
+    if(entry.type === "folder") goToPath(entry.content, false)
+    else searchFiles(entry.content.slice(8, -2))
+}
+
+function pushHistory(content: string, type: string){
+    const current = visitedFolders.value[historyIndex.value]
+    if(current && current.content === content && current.type === type) return
+    visitedFolders.value.splice(historyIndex.value + 1)
+    visitedFolders.value.push({ content, type })
+    historyIndex.value = visitedFolders.value.length - 1
+}
+
 onMounted(() => {
     selectedFolder.value = folders[0]
     window.addEventListener('keydown', handleKey)
+    visitedFolders.value[0] = { content: selectedFolder.value.name, type: "folder" }
+    historyIndex.value = visitedFolders.value.length - 1
 })
 
 onUnmounted(() => {
@@ -94,8 +130,8 @@ onUnmounted(() => {
 <template>
     <div class="main_expl">
         <div class="top_part">
-            <img class="back_button" :src="forwardImage" draggable="false">
-            <img class="forward_button" :src="forwardImage" draggable="false"> 
+            <img class="back_button" :src="forwardImage" draggable="false" @click="goBackHistory()">
+            <img class="forward_button" :src="forwardImage" draggable="false" @click="goForwardHistory()"> 
             <input class="path_input" placeholder="Path" type="text" name="path" id="path" @focus="selectedOption.path = true" @blur="selectedOption.path = false" v-model="pathValue">
             <input class="search_input" placeholder="Search..." type="text" name="search" id="search" @focus="selectedOption.search = true" @blur="selectedOption.search = false" v-model="searchValue">
         </div>
