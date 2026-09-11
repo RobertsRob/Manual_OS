@@ -25,6 +25,11 @@ const startPos = ref([0, 0])
 const startWindowPos = ref([0, 0])
 const isMaximized = ref(false)
 const nonMaxPos = ref(props.position)
+const fixed = ref("notFixed")
+
+function makeFixed() {
+    fixed.value = "fixed"
+}
 
 function move(event: MouseEvent) {
     if(dragging.value){
@@ -99,7 +104,7 @@ function full_part_screen(){
         height: `calc(${size[1]}px)`,
         zIndex: zIndex
     }">
-        <header>
+        <header :class="fixed">
             <div class="left_part" @mousedown="startDrag($event)">
                 <img  :src="icon" :alt="title" class="icon_app" draggable="false">
                 {{ title }}
@@ -110,7 +115,7 @@ function full_part_screen(){
                 <div class="close" @click="emit('close')"><img class="icon_window" :src="closeImage" draggable="false"></div>
             </div>
         </header>
-        <component :is="component" :active="props.active" :initial_text="initial_text"/>
+        <component :is="component" :active="props.active" :initial_text="initial_text" :makeFixed="makeFixed"/>
     </div>
 </template>
 
@@ -168,5 +173,9 @@ header{
     height: 100%;
     width: auto;
     aspect-ratio: 1 / 1;
+}
+.fixed{
+    display: none;
+    visibility: hidden;
 }
 </style>

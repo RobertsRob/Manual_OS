@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import TrashImage1 from "../../../assets/trash.png"
 import LauncherImage from "../../../assets/launcher.png"
+import BasketImage from "../../../assets/basket.png"
+import BottomPlatform from "../../../assets/bottom_platform.png"
+import { show_booting_screewn_with } from '../../../data/user';
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 const verInput = ref(0)
 const horInput = ref(0)
+
+const props = defineProps<{
+    makeFixed: () => void
+}>()
 
 const g = 10
 const launchTime = 400
@@ -13,6 +20,11 @@ let CW = 0
 let CH = 0
 let launching = false
 let verClam = 0, horClam = 0
+const grassLevel = 50
+const initialTime = 3000
+let remTime = initialTime
+let tragicEvent = false
+let countdown = 6000
 
 let trash = {
     img: new Image(),
@@ -39,6 +51,25 @@ let leg = {
     img: new Image(),
 }
 
+let baskets: any[] | null = null
+let basket: any | null = null
+let basket_x: any | null = null
+let basket_y: any | null = null
+let basket_img = new Image()
+let bottomPlatformImg = new Image()
+let won = false
+const timeColours = [
+    {tr: 3000, c: "darkgreen"},
+    {tr: 2500, c: "green"},
+    {tr: 1500, c: "lime"},
+    {tr: 800, c: "yellow"},
+    {tr: 400, c: "white"},
+    {tr: 300, c: "red"},
+
+    {tr: 200, c: "white"},
+    {tr: 10, c: "red"},
+]
+
 function displayImageRotation(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, img: HTMLImageElement, rot: number){
     ctx.save()
     ctx.translate(x + w / 2, y + h / 2)
@@ -53,6 +84,10 @@ function displayRectRotation(ctx: CanvasRenderingContext2D, x: number, y: number
     ctx.fillStyle = color
     ctx.fillRect(-w / 2, -h / 2, w, h)
     ctx.restore()
+}
+
+function random(min: number, max: number) {
+  return Math.random() * (max - min) + min;
 }
 
 function update() {
@@ -82,9 +117,68 @@ function update() {
     leg.rot = launchAngle
 
     if (!trash.locked) {
-        trash.y_v += g * 0.01
-        trash.y_pos += trash.y_v
-        trash.rotation += trash.rot_v * Math.max(Math.sqrt(Math.pow(trash.x_v, 2) + Math.pow(trash.y_v, 2)), 2) * 0.1
+        if (trash.y_pos < CH - grassLevel) {
+            trash.y_v += g * 0.01
+            trash.x_pos += trash.x_v
+            trash.y_pos += trash.y_v
+            trash.rotation += trash.rot_v * Math.max(Math.sqrt(Math.pow(trash.x_v, 2) + Math.pow(trash.y_v, 2)), 2) * 0.1
+        } else{
+            trash.y_pos = CH - grassLevel
+            trash.rotation += Math.random() * 2.5 - 1.25
+            trash.y_v += g * 0.005
+            trash.x_pos += trash.x_v * 0.002
+            trash.y_pos += trash.y_v
+        }
+        if (remTime > 0 && won === false){
+            remTime -= 10
+            if (trash.x_pos < basket_x + basket.w &&
+                trash.x_pos + trash.w > basket_x &&
+                trash.y_pos < basket_y + basket.h &&
+                trash.y_pos + trash.h > basket_y) {
+                won = true
+                trash.x_pos = 10000
+                remTime = initialTime
+                tragicEvent = Math.random() > 0.6 // 20 % of tragic event possibility
+                if(tragicEvent){
+                    countdown = 6000
+                    props.makeFixed()
+                }
+            }
+
+            ctx.font = '50px "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace';
+            timeColours.forEach(el => {
+                if(el.tr >= remTime){
+                    ctx.fillStyle = el.c
+                }
+            });
+            // ctx.fillStyle = "red";
+            ctx.fillText(remTime.toString(), CW / 2 - 80, 80);
+        } else if (remTime <= 0 && won === false){
+            ctx.font = '20px "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace';
+            ctx.fillStyle = "red"
+            ctx.fillText("Error while deleting important file!", CW / 2 - 220, 40);
+            ctx.font = '15px "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace';
+            ctx.fillText("Press 'R' to restart!", CW / 2 - 220, 60);
+        } else if (won){
+            countdown -= 10
+            if(tragicEvent){
+                ctx.font = '30px "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace';
+                ctx.fillStyle = countdown % 200 < 100 ? "white" : "black"
+                ctx.fillText("You deleted an important file!", CW / 2 - 240, 40);
+                ctx.font = '23px "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace';
+                ctx.fillText("ERROR, self destruction in " + countdown.toString() + "!", CW / 2 - 240, 80);
+                if(countdown <= 0){
+                    show_booting_screewn_with(2)
+                }
+            }
+            else {
+                ctx.font = '30px "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", "Noto Sans Mono", monospace';
+                ctx.fillStyle = "lime"
+                ctx.fillText("You deleted a file!", CW / 2 - 220, 40);
+            }
+            
+        }
+        
     } else {
         let x_off = trash.f_offset * Math.sin((90 - launchAngle) * Math.PI / 180)
         let y_off = trash.f_offset * Math.sin(launchAngle * Math.PI / 180) - (90 - launchAngle) * 0.45
@@ -95,24 +189,30 @@ function update() {
 
     
 
-
-
     // render
     ctx.fillStyle = "red"
 
     ctx.fillStyle = "brown"
+    displayImageRotation(ctx, 0, CH-30, CW/3, 30, bottomPlatformImg, 0)
+    displayImageRotation(ctx, CW/3, CH-30, CW/3, 30, bottomPlatformImg, 0)
+    displayImageRotation(ctx, 2*CW/3, CH-30, CW/3, 30, bottomPlatformImg, 0)
+    displayImageRotation(ctx, basket_x + basket.w / 2 - 15, basket_y + basket.h / 2 - 50, 30, 100, basket_img, basket.rot)
     displayImageRotation(ctx, trash.x_pos, trash.y_pos, trash.w, trash.h, trash.img, trash.rotation)
     displayImageRotation(ctx, leg.x, leg.y, leg.w, leg.h, leg.img, leg.rot)
-
+    // ctx.fillText("0", basket_x, basket_y)
+    // ctx.fillText("0", basket_x+30, basket_y)
+    // ctx.fillText("0", basket_x, basket_y+100)
+    // ctx.fillText("0", basket_x+30, basket_y+100)
 }
 
 function shoot_trash(){
+    if(won === true || launching === true) return  
     launching = true
     setTimeout(() => {
+        remTime = initialTime
+        trash.x_v = Math.min(Math.max(horInput.value, 1), 100) * 0.1
+        trash.y_v = -Math.min(Math.max(verInput.value, 10), 90) * 0.1
         trash.locked = false
-        trash.x_v = horClam * 15
-        trash.y_v = verClam * 0.1
-        console.log(trash.y_v)
     }, launchTime);
 }
 
@@ -139,7 +239,63 @@ onMounted(() => {
     trash.img.src = TrashImage1
     leg.img = new Image()
     leg.img.src = LauncherImage
+
+    baskets = [
+        {
+            x_min: CW - 60,
+            x_max: CW - 40,
+            y_min: 20,
+            y_max: CH - 130,
+            w: 30,
+            h: 100,
+            rot: 0,
+        },
+        {
+            x_min: CW - 450,
+            x_max: CW - 110,
+            y_min: CH - 90,
+            y_max: CH - 60,
+            w: 100,
+            h: 30,
+            rot: 90,
+        }
+    ]
+    
+    basket_img.src = BasketImage
+    bottomPlatformImg.src = BottomPlatform
+    basket = baskets?.[Math.round(Math.random())]
+    basket_x = random(basket.x_min, basket.x_max)
+    basket_y = random(basket.y_min, basket.y_max)
+    window.addEventListener('keydown', handleKey)
 })
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKey)
+})
+
+function handleKey(event: KeyboardEvent) {
+    switch (event.key) {
+        case "r":
+            if(remTime <= 0) resetGame()
+            break
+        case "Enter":
+            shoot_trash()
+            break
+    }
+}
+
+function resetGame(){
+    launching = false
+    trash.locked = true
+    leg.y = CH - leg.f_y
+    won = false
+
+    trash.x_pos = CW / 2
+    trash.y_pos = CH / 4
+    trash.img.src = TrashImage1
+    leg.img = new Image()
+    leg.img.src = LauncherImage
+}
 
 </script>
 
