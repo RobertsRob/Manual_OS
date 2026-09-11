@@ -77,14 +77,14 @@ function displayImageRotation(ctx: CanvasRenderingContext2D, x: number, y: numbe
     ctx.drawImage(img, -w / 2, -h / 2, w, h)
     ctx.restore()
 }
-function displayRectRotation(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string, rot: number){
-    ctx.save()
-    ctx.translate(x + w / 2, y + h / 2)
-    ctx.rotate(rot * Math.PI / 180)
-    ctx.fillStyle = color
-    ctx.fillRect(-w / 2, -h / 2, w, h)
-    ctx.restore()
-}
+// function displayRectRotation(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string, rot: number){
+//     ctx.save()
+//     ctx.translate(x + w / 2, y + h / 2)
+//     ctx.rotate(rot * Math.PI / 180)
+//     ctx.fillStyle = color
+//     ctx.fillRect(-w / 2, -h / 2, w, h)
+//     ctx.restore()
+// }
 
 function random(min: number, max: number) {
   return Math.random() * (max - min) + min;
