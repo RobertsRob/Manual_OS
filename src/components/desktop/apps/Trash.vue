@@ -11,6 +11,7 @@ const verInput = ref(0)
 const horInput = ref(0)
 
 const props = defineProps<{
+    active: boolean
     makeFixed: () => void
 }>()
 
@@ -274,6 +275,7 @@ onUnmounted(() => {
 })
 
 function handleKey(event: KeyboardEvent) {
+    if(!props.active) return
     switch (event.key) {
         case "r":
             if(remTime <= 0) resetGame()
